@@ -2,7 +2,7 @@
 const { test } = require('../../fixtures/pom-fixture');
 const { TestDataManager } = require('../../utils/TestDataManager');
 
-test.describe('ParaBank - Global Navigation (Step 4)', () => {
+test.describe('ParaBank - Global Navigation (Step 4) @ui @navigation', () => {
   const dataManager = new TestDataManager();
   let userData;
 
@@ -15,7 +15,7 @@ test.describe('ParaBank - Global Navigation (Step 4)', () => {
       const lp = new LoginPage(page);
       const rp = new RegisterPage(page);
       userData = dataManager.generateFreshUser();
-      
+
       await lp.navigate();
       await lp.clickRegister();
       await rp.register(userData);

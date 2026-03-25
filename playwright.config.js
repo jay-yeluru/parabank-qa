@@ -5,7 +5,6 @@ require('dotenv').config();
 module.exports = defineConfig({
   testDir: './tests',
 
-
   fullyParallel: true, // Independent tests can now run in parallel
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1, // Add retries for stability with more workers
@@ -16,7 +15,7 @@ module.exports = defineConfig({
     ['list'],
     ['junit', { outputFile: 'test-results/results.xml' }],
     ['json', { outputFile: 'test-results/report.json' }],
-    ['allure-playwright', { outputFolder: 'allure-results' }]
+    ['allure-playwright', { outputFolder: 'allure-results' }],
   ],
   use: {
     baseURL: process.env.BASE_URL || 'https://parabank.parasoft.com',
@@ -37,7 +36,6 @@ module.exports = defineConfig({
       // No more dependency on UI! Both projects can now run in parallel.
       use: { ...devices['Desktop Chrome'] },
     },
-
   ],
   outputDir: 'test-results/',
 });

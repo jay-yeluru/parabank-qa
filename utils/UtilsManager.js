@@ -12,7 +12,7 @@ class UtilsManager {
   getHelpers() {
     return helpers;
   }
-  
+
   /**
    * Returns a new instance of ApiClient.
    * Note: Now accepts username and password for authentication.
@@ -21,10 +21,9 @@ class UtilsManager {
    * @param {string} password
    * @returns {ApiClient}
    */
-  getApiClient(requestContext, username, password) { 
-    return new ApiClient(requestContext, username, password); 
+  getApiClient(requestContext, username, password) {
+    return new ApiClient(requestContext, username, password);
   }
 }
 
 module.exports = { UtilsManager };
-

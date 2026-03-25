@@ -9,7 +9,7 @@ class TestDataManager {
   constructor() {
     this.userData = null;
     this.billData = null;
-    
+
     // Default values from constants
     this.transferAmount = CONSTANTS.DEFAULT_VALUES.TRANSFER_AMOUNT;
     this.apiTransferAmount = CONSTANTS.DEFAULT_VALUES.API_TRANSFER_AMOUNT;
@@ -75,7 +75,6 @@ class TestDataManager {
    *            zipCode: string, phone: string, accountNumber: string, amount: string }}
    */
   generateBillData(amount = CONSTANTS.DEFAULT_VALUES.BILL_AMOUNT, suffix = '') {
-
     this.billData = {
       payeeName: `Electricity Company${suffix ? ' ' + suffix : ''}`,
       street: `${randomDigits(3)} Power Ave`,
@@ -107,4 +106,3 @@ class TestDataManager {
 }
 
 module.exports = { TestDataManager };
-

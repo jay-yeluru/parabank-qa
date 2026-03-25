@@ -1,9 +1,11 @@
 const { test } = require('../../fixtures/pom-fixture');
 
-
-test.describe('ParaBank - Accounts Management (Step 5 & 6)', () => {
-
-  test('TC-01 - Open New Savings Account and Verify Overview', async ({ poManager, dataManager, registeredUser }) => {
+test.describe('ParaBank - Accounts Management (Step 5 & 6) @ui @accounts', () => {
+  test('TC-01 - Open New Savings Account and Verify Overview @smoke', async ({
+    poManager,
+    dataManager,
+    registeredUser,
+  }) => {
     const userData = registeredUser;
 
     const loginPage = poManager.getLoginPage();
@@ -25,5 +27,3 @@ test.describe('ParaBank - Accounts Management (Step 5 & 6)', () => {
     await overviewPage.verifyBalancesDisplayed();
   });
 });
-
-

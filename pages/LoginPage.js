@@ -1,4 +1,4 @@
-const { expect } = require('@playwright/test');
+const { expect, test } = require('@playwright/test');
 
 class LoginPage {
   /**
@@ -14,8 +14,10 @@ class LoginPage {
   }
 
   async navigate() {
-    await this.page.goto('/parabank/index.htm');
-    await expect(this.page).toHaveTitle(/ParaBank/);
+    await test.step('Navigate to Login/Index Page', async () => {
+      await this.page.goto('/parabank/index.htm');
+      await expect(this.page).toHaveTitle(/ParaBank/);
+    });
   }
 
   /**
@@ -23,17 +25,23 @@ class LoginPage {
    * @param {string} password
    */
   async login(username, password) {
-    await this.usernameInput.fill(username);
-    await this.passwordInput.fill(password);
-    await this.loginButton.click();
+    await test.step(`Login with user: ${username}`, async () => {
+      await this.usernameInput.fill(username);
+      await this.passwordInput.fill(password);
+      await this.loginButton.click();
+    });
   }
 
   async clickRegister() {
-    await this.registerLink.click();
+    await test.step('Click Register link', async () => {
+      await this.registerLink.click();
+    });
   }
 
   async verifySuccessfulLogin() {
-    await expect(this.page).toHaveURL(/overview/, { timeout: 10000 });
+    await test.step('Verify login was successful', async () => {
+      await expect(this.page).toHaveURL(/overview/, { timeout: 10000 });
+    });
   }
 }
 

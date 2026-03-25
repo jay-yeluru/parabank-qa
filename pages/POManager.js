@@ -21,13 +21,27 @@ class POManager {
     this.registerPage = new RegisterPage(this.page);
   }
 
-  getLoginPage() { return this.loginPage; }
-  getHomePage() { return this.homePage; }
-  getOpenNewAccountPage() { return this.openNewAccountPage; }
-  getAccountsOverviewPage() { return this.accountsOverviewPage; }
-  getTransferFundsPage() { return this.transferFundsPage; }
-  getBillPayPage() { return this.billPayPage; }
-  getRegisterPage() { return this.registerPage; }
+  getLoginPage() {
+    return this.loginPage;
+  }
+  getHomePage() {
+    return this.homePage;
+  }
+  getOpenNewAccountPage() {
+    return this.openNewAccountPage;
+  }
+  getAccountsOverviewPage() {
+    return this.accountsOverviewPage;
+  }
+  getTransferFundsPage() {
+    return this.transferFundsPage;
+  }
+  getBillPayPage() {
+    return this.billPayPage;
+  }
+  getRegisterPage() {
+    return this.registerPage;
+  }
 }
 
 module.exports = { POManager };

@@ -26,10 +26,15 @@ class TransferFundsPage {
    */
   async transferFunds(amount, fromAccountId, toAccountId) {
     await this.fromAccountSelect.waitFor({ state: 'visible' });
-    
+
     // Wait for the specific account options to be populated by Angular XHR
-    await expect(this.fromAccountSelect.locator(`option[value="${fromAccountId}"]`)).toHaveCount(1, { timeout: 15000 });
-    await expect(this.toAccountSelect.locator(`option[value="${toAccountId}"]`)).toHaveCount(1, { timeout: 15000 });
+    await expect(this.fromAccountSelect.locator(`option[value="${fromAccountId}"]`)).toHaveCount(
+      1,
+      { timeout: 15000 }
+    );
+    await expect(this.toAccountSelect.locator(`option[value="${toAccountId}"]`)).toHaveCount(1, {
+      timeout: 15000,
+    });
 
     await this.amountInput.fill(amount);
     await this.fromAccountSelect.selectOption({ value: fromAccountId });

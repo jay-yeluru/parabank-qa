@@ -48,23 +48,18 @@ class ApiClient {
    * @returns {Promise<import('@playwright/test').APIResponse>}
    */
   async createAccount(customerId, fromAccountId, accountType) {
-    return this.request.post(
-      `/parabank/services/bank/createAccount`,
-      {
-        params: {
-          customerId: customerId,
-          newAccountType: accountType === 'SAVINGS' ? 1 : 0, // ParaBank uses 0/1 for account types in some API versions
-          fromAccountId: fromAccountId
-        },
-        headers: {
-          Accept: 'application/json',
-          Authorization: this.getAuthHeader(),
-        },
-      }
-    );
+    return this.request.post(`/parabank/services/bank/createAccount`, {
+      params: {
+        customerId: customerId,
+        newAccountType: accountType === 'SAVINGS' ? 1 : 0, // ParaBank uses 0/1 for account types in some API versions
+        fromAccountId: fromAccountId,
+      },
+      headers: {
+        Accept: 'application/json',
+        Authorization: this.getAuthHeader(),
+      },
+    });
   }
 }
 
 module.exports = { ApiClient };
-
-

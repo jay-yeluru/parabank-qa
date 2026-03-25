@@ -21,7 +21,7 @@ const CONSTANTS = {
     TRANSFER_AMOUNT: '100.00',
     BILL_AMOUNT: '50.00',
     API_TRANSFER_AMOUNT: '25.00',
-  }
+  },
 };
 
 module.exports = { CONSTANTS };

@@ -44,12 +44,12 @@ const contextFixtures = coreFixtures.extend({
     await loginPage.clickRegister();
     await registerPage.register(userData);
     await registerPage.verifyRegistrationSuccess(userData.username);
-    
+
     // Many ParaBank tests expect to log in explicitly. Ensure we start logged out.
     if (await homePage.navLogout.isVisible({ timeout: 5000 })) {
-       await homePage.logout();
+      await homePage.logout();
     }
-    
+
     await use(userData);
   },
 
@@ -64,12 +64,12 @@ const contextFixtures = coreFixtures.extend({
 
     await openAccountPage.navigate();
     const accountId = await openAccountPage.openAccount(dataManager.getSavingsAccountType());
-    
+
     const homePage = poManager.getHomePage();
     await homePage.logout();
 
     await use({ accountId, userData: registeredUser });
-  }
+  },
 });
 
 module.exports = { contextFixtures };

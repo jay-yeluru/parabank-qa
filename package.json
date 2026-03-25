@@ -9,7 +9,9 @@
     "test:serial": "playwright test --workers=1",
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
-    "test:report": "playwright show-report"
+    "test:report": "playwright show-report",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "repository": {
     "type": "git",
@@ -27,6 +29,7 @@
   "devDependencies": {
     "@playwright/test": "^1.58.2",
     "allure-playwright": "^3.6.0",
-    "dotenv": "^17.3.1"
+    "dotenv": "^17.3.1",
+    "prettier": "^3.8.1"
   }
 }

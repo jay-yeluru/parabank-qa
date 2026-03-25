@@ -5,6 +5,7 @@ This project is a robust, modular, and maintainable end-to-end (E2E) test automa
 ## 🚀 Overview
 
 The framework covers both UI and API test scenarios, ensuring the complete functional integrity of banking features including:
+
 - User Registration & Authentication (with unique/random usernames)
 - Account Management (Opening New Savings Accounts)
 - Transaction Management (Fund Transfers & Bill Payments)
@@ -32,10 +33,10 @@ The framework covers both UI and API test scenarios, ensuring the complete funct
 - **Parallel Execution**: Configured with `fullyParallel: true` in `playwright.config.js`, enabling fast, independent test runs across multiple workers.
 - **Dynamic Test Data**: Generates random and unique usernames, SSNs, and transaction details for every run.
 - **CI/CD Integration**: Fully integrated with GitHub Actions.
-- **Rich Reporting**: 
-    - Full HTML reporting with screenshots and logs on failure.
-    - Automated Email Reports via SendGrid (Stats, Pass/Fail counts, Links to artifacts).
-    - GitHub Pages deployment for persistent report history.
+- **Rich Reporting**:
+  - Full HTML reporting with screenshots and logs on failure.
+  - Automated Email Reports via SendGrid (Stats, Pass/Fail counts, Links to artifacts).
+  - GitHub Pages deployment for persistent report history.
 
 ## 🏗️ Implementation Roadmap
 
@@ -63,10 +64,12 @@ The framework is built around a "Fixture-First" approach for maximum scalability
 ## 🏁 Getting Started
 
 ### Prerequisites
+
 - Node.js (LTS version recommended)
 - `npm install`
 
 ### Run Tests
+
 - **All Tests (Parallel)**: `npm test`
 - **UI Only**: `npm run test:ui`
 - **API Only**: `npm run test:api`
@@ -75,21 +78,27 @@ The framework is built around a "Fixture-First" approach for maximum scalability
 - **Debug Mode**: `npm run test:debug`
 
 ### View Report
+
 After execution:
+
 - `npm run test:report`
 
 ## 📧 CI/CD & Email Setup
 
 The GitHub Actions pipeline is configured for:
+
 - **Automatic Execution**: Runs on every `push` or `pull_request` to the `main` branch.
 - **Manual Execution**: Use the **Actions** tab in GitHub to run the `Manual Playwright Tests` workflow. This allows you to select a specific test suite (`all`, `ui`, or `api`) and target environment.
 
 ### Secrets Configuration
+
 The pipeline requires the following **Secrets** to be configured in your repository:
+
 - `BASE_URL`: The ParaBank URL (e.g., `https://parabank.parasoft.com`).
 - `SENDGRID_API_KEY`: API key for email delivery.
 - `EMAIL_FROM`: Sender email address.
 - `EMAIL_TO`: Recipient email address.
 
 ## ⚖️ License
+
 This project is for educational/demonstration purposes of E2E automation best practices.

@@ -1,14 +1,17 @@
 const { test } = require('../../fixtures/api-fixtures');
 const { ApiResponsePage } = require('../../pages/ApiResponsePage');
 
-test.describe('ParaBank - Find Transactions API (Self-Contained)', () => {
-
-  test('TC-API-01 - Find transactions by amount returns correct data', async ({ request, apiUserClient, apiData }) => {
+test.describe('ParaBank - Find Transactions API (Self-Contained) @api @transactions', () => {
+  test('TC-API-01 - Find transactions by amount returns correct data @smoke', async ({
+    request,
+    apiUserClient,
+    apiData,
+  }) => {
     const { savingsAccountId, amount } = apiData;
-    
+
     // 1. Call API: GET /accounts/{id}/transactions/amount/{amount}
     const response = await apiUserClient.findTransactionsByAmount(savingsAccountId, amount);
-    
+
     // VERIFY: HTTP 200 (Step 1 API)
     const apiResponse = new ApiResponsePage(response);
     await apiResponse.verifyStatus(200);
@@ -22,20 +25,23 @@ test.describe('ParaBank - Find Transactions API (Self-Contained)', () => {
 
     const transaction = body[0];
     await apiResponse.verifyTransactionDetails(
-      transaction, 
-      savingsAccountId, 
-      amount, 
-      'Credit', 
-      'Deposit' 
+      transaction,
+      savingsAccountId,
+      amount,
+      'Credit',
+      'Deposit'
     );
   });
 
-  test('TC-API-02 - Find transactions by non-existent amount', async ({ apiUserClient, apiData }) => {
+  test('TC-API-02 - Find transactions by non-existent amount', async ({
+    apiUserClient,
+    apiData,
+  }) => {
     const { savingsAccountId } = apiData;
-    
+
     const fakeAmount = '999999.99';
     const response = await apiUserClient.findTransactionsByAmount(savingsAccountId, fakeAmount);
-    
+
     const apiResponse = new ApiResponsePage(response);
     await apiResponse.verifyStatusOneOf([200, 404]);
 
@@ -45,7 +51,3 @@ test.describe('ParaBank - Find Transactions API (Self-Contained)', () => {
     }
   });
 });
-
-
-
-

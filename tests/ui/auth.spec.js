@@ -1,9 +1,8 @@
 // @ts-check
 const { test } = require('../../fixtures/pom-fixture');
 
-test.describe('ParaBank - User Authentication (Step 2 & 3)', () => {
-
-  test('TC-01 - User Registration and Login', async ({ poManager, dataManager }) => {
+test.describe('ParaBank - User Authentication (Step 2 & 3) @ui @auth', () => {
+  test('TC-01 - User Registration and Login @smoke', async ({ poManager, dataManager }) => {
     const userData = dataManager.generateFreshUser();
 
     const loginPage = poManager.getLoginPage();

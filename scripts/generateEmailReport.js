@@ -3,7 +3,7 @@ const path = require('path');
 
 async function sendEmail() {
   const resultsPath = path.resolve('test-results/report.json');
-  
+
   if (!fs.existsSync(resultsPath)) {
     console.error('Report file not found. Skipping email.');
     process.exit(0);
@@ -41,7 +41,7 @@ async function sendEmail() {
   const pagesUrl = `https://${owner}.github.io/${repo}/`;
 
   const failureList = stats.failures.length
-    ? stats.failures.map(f => `• ${f.title} (${f.file})`).join('\n')
+    ? stats.failures.map((f) => `• ${f.title} (${f.file})`).join('\n')
     : 'None';
 
   const body = `
@@ -88,7 +88,7 @@ ${pagesUrl}
   console.log('Email sent successfully');
 }
 
-sendEmail().catch(err => {
+sendEmail().catch((err) => {
   console.error(err);
   process.exit(1);
 });

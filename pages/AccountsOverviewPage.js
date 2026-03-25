@@ -28,8 +28,11 @@ class AccountsOverviewPage {
    */
   async getAccountRows() {
     // Ensure table populated before pulling text
-    await this.accountsTable.locator('tbody tr a').first().waitFor({ state: 'visible', timeout: 15000 });
-    
+    await this.accountsTable
+      .locator('tbody tr a')
+      .first()
+      .waitFor({ state: 'visible', timeout: 15000 });
+
     // Only capture rows that contain a link to avoid footers/totals sometimes rendered in tbody
     const rows = this.accountsTable.locator('tbody tr').filter({ has: this.page.locator('a') });
     const count = await rows.count();
