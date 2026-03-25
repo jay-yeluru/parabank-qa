@@ -1,0 +1,7 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","4289","TC-01 - Open New Savings Account and Verify Overview @smoke","UI","Wed Mar 25 09:41:07 UTC 2026","passed","Wed Mar 25 09:41:11 UTC 2026","ParaBank - Accounts Management (Step 5 & 6) @ui @accounts","ui/accounts.spec.js","",""
+"","3694","TC-01 - User Registration and Login @smoke","UI","Wed Mar 25 09:41:07 UTC 2026","passed","Wed Mar 25 09:41:10 UTC 2026","ParaBank - User Authentication (Step 2 & 3) @ui @auth","ui/auth.spec.js","",""
+"","4618","TC-01 - Transfer Funds and Pay Bill @smoke","UI","Wed Mar 25 09:41:13 UTC 2026","passed","Wed Mar 25 09:41:18 UTC 2026","ParaBank - Fund Transfers and Bill Payments (Step 7 & 8) @ui @transactions","ui/transactions.spec.js","",""
+"","1249","TC-01 - Global Navigation Menu Visibility","UI","Wed Mar 25 09:41:13 UTC 2026","passed","Wed Mar 25 09:41:14 UTC 2026","ParaBank - Global Navigation (Step 4) @ui @navigation","ui/navigation.spec.js","",""
+"","2957","TC-API-01 - Find transactions by amount returns correct data @smoke","API","Wed Mar 25 09:41:17 UTC 2026","passed","Wed Mar 25 09:41:20 UTC 2026","ParaBank - Find Transactions API (Self-Contained) @api @transactions","api/findTransactions.spec.js","",""
+"","2895","TC-API-02 - Find transactions by non-existent amount","API","Wed Mar 25 09:41:19 UTC 2026","passed","Wed Mar 25 09:41:22 UTC 2026","ParaBank - Find Transactions API (Self-Contained) @api @transactions","api/findTransactions.spec.js","",""
