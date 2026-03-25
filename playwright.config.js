@@ -18,7 +18,8 @@ module.exports = defineConfig({
     ['allure-playwright', { outputFolder: 'allure-results' }],
   ],
   use: {
-    baseURL: process.env.BASE_URL || 'https://parabank.parasoft.com',
+    // Dynamic Base URL based on environment (stage, beta, prod)
+    baseURL: require('./configs/environment').config.baseUrl,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

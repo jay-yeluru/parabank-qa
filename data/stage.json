@@ -1,0 +1,6 @@
+{
+  "transferAmount": "100.00",
+  "apiTransferAmount": "25.00",
+  "billAmount": "50.00",
+  "adminEndpoint": "/parabank/admin.htm"
+}

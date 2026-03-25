@@ -1,50 +1,57 @@
 const { generateUserData, randomDigits } = require('./helpers');
 const { CONSTANTS } = require('./constants');
+const path = require('path');
 
 /**
  * TestDataManager class to manage all test data generation and state.
- * Refactor note: Centralizes static strings via constants.js
+ * Refactors environment-specific data loading with fallbacks to defaults.
  */
 class TestDataManager {
   constructor() {
     this.userData = null;
     this.billData = null;
 
-    // Default values from constants
-    this.transferAmount = CONSTANTS.DEFAULT_VALUES.TRANSFER_AMOUNT;
-    this.apiTransferAmount = CONSTANTS.DEFAULT_VALUES.API_TRANSFER_AMOUNT;
-    this.checkingAccountType = CONSTANTS.ACCOUNT_TYPES.CHECKING;
-    this.savingsAccountType = CONSTANTS.ACCOUNT_TYPES.SAVINGS;
-    this.registrationSuccessMessage = CONSTANTS.MESSAGES.REGISTRATION_SUCCESS;
-    this.adminEndpoint = CONSTANTS.ENDPOINTS.ADMIN;
+    const ENV = process.env.TEST_ENV || 'stage';
+    
+    // Load data with tiered fallback: Env-specific -> Global Default -> Static Constants
+    const defaultData = require('../data/default.json');
+    let envData = {};
+    try {
+      envData = require(`../data/${ENV}.json`);
+    } catch (e) {
+      console.warn(`Warning: Could not load data for environment: ${ENV}, using defaults.`);
+    }
+
+    const { config } = require('../configs/environment');
+
+    // Consolidate data into a single searchable object
+    this.data = {
+      ...CONSTANTS.DEFAULT_VALUES,
+      ...defaultData,
+      ...config,
+      ...envData,
+    };
+
+    // Static messages and types from constants
+    this.types = CONSTANTS.ACCOUNT_TYPES;
+    this.messages = CONSTANTS.MESSAGES;
+    this.endpoints = CONSTANTS.ENDPOINTS;
   }
 
-  /**
-   * @returns {string} The endpoint for the administration page
-   */
   getAdminEndpoint() {
-    return this.adminEndpoint;
+    return this.data.adminEndpoint || this.endpoints.ADMIN;
   }
 
-  /**
-   * @returns {string} Success message for user registration
-   */
   getRegistrationSuccessMessage() {
-    return this.registrationSuccessMessage;
+    return this.messages.REGISTRATION_SUCCESS;
   }
 
-  /**
-   * @returns {string} The formatted checking account type
-   */
   getCheckingAccountType() {
-    return this.checkingAccountType;
+    return this.types.CHECKING;
   }
 
-  /**
-   * @returns {string} The formatted savings account type
-   */
   getSavingsAccountType() {
-    return this.savingsAccountType;
+    return this.types.SAVINGS;
   }
 
   /**
@@ -57,24 +64,16 @@ class TestDataManager {
   }
 
   /**
-   * Returns the current user data or generates it if not present.
-   * @returns {import('../fixtures/pom-fixture').UserData}
+   * Returns current or new user data.
    */
   getUserData() {
-    if (!this.userData) {
-      return this.generateFreshUser();
-    }
-    return this.userData;
+    return this.userData || this.generateFreshUser();
   }
 
   /**
    * Generates and returns bill payment data.
-   * @param {string} amount - The amount for the bill.
-   * @param {string} suffix - Optional suffix for the payee name.
-   * @returns {{ payeeName: string, street: string, city: string, state: string,
-   *            zipCode: string, phone: string, accountNumber: string, amount: string }}
    */
-  generateBillData(amount = CONSTANTS.DEFAULT_VALUES.BILL_AMOUNT, suffix = '') {
+  generateBillData(amount = this.data.billAmount, suffix = '') {
     this.billData = {
       payeeName: `Electricity Company${suffix ? ' ' + suffix : ''}`,
       street: `${randomDigits(3)} Power Ave`,
@@ -83,25 +82,17 @@ class TestDataManager {
       zipCode: randomDigits(5),
       phone: randomDigits(10),
       accountNumber: randomDigits(8),
-      amount: amount,
+      amount: String(amount),
     };
     return this.billData;
   }
 
-  /**
-   * Returns generic transfer amount.
-   * @returns {string}
-   */
   getTransferAmount() {
-    return this.transferAmount || CONSTANTS.DEFAULT_VALUES.TRANSFER_AMOUNT;
+    return String(this.data.transferAmount || this.data.TRANSFER_AMOUNT);
   }
 
-  /**
-   * Returns generic transfer amount for API setup.
-   * @returns {string}
-   */
   getApiTransferAmount() {
-    return this.apiTransferAmount || CONSTANTS.DEFAULT_VALUES.API_TRANSFER_AMOUNT;
+    return String(this.data.apiTransferAmount || this.data.API_TRANSFER_AMOUNT);
   }
 }
 

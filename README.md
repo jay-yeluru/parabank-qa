@@ -1,6 +1,6 @@
 # ParaBank E2E Test Automation Framework
 
-This project is a robust, modular, and maintainable end-to-end (E2E) test automation framework for the [ParaBank](https://parabank.parasoft.com/) application using **Playwright** with **JavaScript**.
+This project is a high-performance, modular, and maintainable end-to-end (E2E) test automation framework for the [ParaBank](https://parabank.parasoft.com/) application using **Playwright** with **JavaScript**.
 
 ## 🚀 Overview
 
@@ -14,52 +14,43 @@ The framework covers both UI and API test scenarios, ensuring the complete funct
 ## 📁 Project Structure
 
 ```text
-├── .github/workflows/    # CI/CD pipelines (GitHub Actions)
+├── .github/workflows/    # CI/CD: Automated and Manual pipelines
+├── configs/              # Infrastructure Config (URLs, Credentials per tier)
+├── data/                 # Tier-Specific Test Data (Amounts, Messages in JSON)
 ├── fixtures/             # Custom Playwright fixtures (POM, Context, API, and Core)
-├── pages/                # Page Object Model (POM) classes managed by POManager
+├── pages/                # Page Object Model (POM) classes with test.step integration
 ├── scripts/              # Helper scripts (Email reporting)
-├── tests/                # Feature-based test suites
-│   ├── api/              # API specific scenarios
-│   └── ui/               # UI specific scenarios
+├── tests/                # Feature-based test suites (@ui, @api, @smoke, @transactions)
 ├── utils/                # Shared utilities (Data generation, API clients, Constants, Helpers)
-├── playwright.config.js  # Playwright global configuration (fullyParallel: true)
-└── package.json          # Project dependencies and script shortcuts
+├── playwright.config.js  # Playwright global configuration (Parallel, Allure, Traces)
+└── package.json          # Project dependencies, scripts, and Prettier config
 ```
 
 ## 🛠️ Key Features
 
+- **Tiered Environment Support**: Dispatcher system supports `stage`, `beta`, and `prod` with separate configs and data.
 - **Page Object Model (POM)**: Encapsulates page logic and selectors, improving modularity and reusability.
-- **Custom Fixtures**: Provides dependency injection for POMs and reusable test states (e.g., `registeredUser`, `savingsAccount`).
-- **Parallel Execution**: Configured with `fullyParallel: true` in `playwright.config.js`, enabling fast, independent test runs across multiple workers.
-- **Dynamic Test Data**: Generates random and unique usernames, SSNs, and transaction details for every run.
-- **CI/CD Integration**: Fully integrated with GitHub Actions.
-- **Rich Reporting**:
-  - Full HTML reporting with screenshots and logs on failure.
-  - Automated Email Reports via SendGrid (Stats, Pass/Fail counts, Links to artifacts).
-  - GitHub Pages deployment for persistent report history.
+- **Custom Fixtures**: Provides dependency injection for POMs and reusable test states (e.g., `registeredUser`).
+- **Parallel Execution**: Configured with `fullyParallel: true`, enabling multi-worker independent test runs.
+- **Rich Reporting & Allure**:
+  - **Allure Reports**: Historical trends, nested categories, and clean execution steps using `test.step`.
+  - **GitHub Pages**: Automated deployment of Allure reports with persistent cross-run history.
+  - **Email Reports**: Stats and pass/fail notifications via SendGrid.
+- **Code Quality**: Prettier integration for consistent formatting across the team.
 
-## 🏗️ Implementation Roadmap
+## 🏗️ Implementation Architecture
 
-The framework is built around a "Fixture-First" approach for maximum scalability:
+### 1. Multi-Tier Environment System
+The framework uses a dual-folder strategy for environment steering:
+*   **[`/configs`](file:///Users/jay/learn/automation/parabank-qa/configs/)**: Stores infrastructure-level settings like `baseUrl` and secure `credentials`.
+*   **[`/data`](file:///Users/jay/learn/automation/parabank-qa/data/)**: Stores business-logic parameters like `transferAmount` and `billAmount` in JSON.
+*   **`TEST_ENV`**: An environment variable controls the active tier (defaults to `stage`).
 
-1. **Page Object Models (POM)**:
-   - UI logic and locators are encapsulated in `pages/` classes.
-   - All POMs are accessed through a centralized `POManager` for clean test logic.
+### 2. "Fixture-First" Logic
+Complex setups (registration, login, account creation) are handled by custom fixtures like `registeredUser` and `savingsAccount`. This allows tests to be 100% independent and inherently parallel-ready.
 
-2. **Decoupled API Client**:
-   - A custom `ApiClient` in `utils/` handles REST interactions.
-   - API tests use specialized fixtures (`apiUserClient`) that function independently of UI state.
-
-3. **Isolated State via Fixtures**:
-   - Complex setups (registration, login, account creation) are handled by custom fixtures like `registeredUser` and `savingsAccount`.
-   - This keeps individual test cases concise and inherently parallel-ready.
-
-4. **Dynamic Data Management**:
-   - **`TestDataManager`**: Generates unique, randomized data (names, SSNs, amounts) for every test run to prevent data collisions.
-   - **`fullyParallel: true`**: Since tests manage their own state via fixtures, they run simultaneously across multiple CPU workers.
-
-5. **CI/CD & Reporting**:
-   - Integrated GitHub Actions with HTML reports, Playwright traces, and automated email notifications via SendGrid.
+### 3. Allure Reporting
+Page Object methods are wrapped in `test.step` blocks. In the Allure dashboard, this translates to clear, business-focused steps instead of raw Playwright commands.
 
 ## 🏁 Getting Started
 
@@ -68,36 +59,41 @@ The framework is built around a "Fixture-First" approach for maximum scalability
 - Node.js (LTS version recommended)
 - `npm install`
 
-### Run Tests
+### Run Tests by Tier
 
-- **All Tests (Parallel)**: `npm test`
+- **Staging (Default)**: `npm run test:stage`
+- **Beta**: `npm run test:beta`
+- **Production**: `TEST_ENV=prod npx playwright test`
+
+### Other Run Options
+
+- **All Tests**: `npm test`
 - **UI Only**: `npm run test:ui`
 - **API Only**: `npm run test:api`
 - **Serial Mode**: `npm run test:serial`
-- **Headed Mode**: `npm run test:headed`
-- **Debug Mode**: `npm run test:debug`
+- **Headed/Debug**: `npm run test:headed` | `npm run test:debug`
 
-### View Report
+### View Reports
 
-After execution:
+- **Playwright HTML**: `npm run test:report`
+- **Allure Open**: `npx allure open allure-report` (requires allure-commandline)
 
-- `npm run test:report`
+### Code Formatting
+- `npm run format`: Formats all files according to `.prettierrc`.
 
 ## 📧 CI/CD & Email Setup
 
-The GitHub Actions pipeline is configured for:
-
-- **Automatic Execution**: Runs on every `push` or `pull_request` to the `main` branch.
-- **Manual Execution**: Use the **Actions** tab in GitHub to run the `Manual Playwright Tests` workflow. This allows you to select a specific test suite (`all`, `ui`, or `api`) and target environment.
+### GitHub Actions
+The pipeline is configured for:
+- **Automatic Execution**: Runs on every `push` to `main`.
+- **Manual Execution**: Use the **Actions** tab to run the `Manual Playwright Tests`. You can select the **Test Suite** (`all`, `ui`, `api`) and **Environment Tier** (`stage`, `beta`, `prod`) from the UI.
 
 ### Secrets Configuration
-
-The pipeline requires the following **Secrets** to be configured in your repository:
-
-- `BASE_URL`: The ParaBank URL (e.g., `https://parabank.parasoft.com`).
+Configure these in GitHub Settings -> Secrets and variables -> Actions:
+- `BASE_URL`: The default ParaBank URL.
 - `SENDGRID_API_KEY`: API key for email delivery.
-- `EMAIL_FROM`: Sender email address.
-- `EMAIL_TO`: Recipient email address.
+- `EMAIL_FROM`: Sender email.
+- `EMAIL_TO`: Recipient email.
 
 ## ⚖️ License
 

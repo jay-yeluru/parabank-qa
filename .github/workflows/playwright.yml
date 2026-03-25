@@ -115,12 +115,15 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: playwright-results
-          path: .
+          path: playwright-results
+
+      - name: Debug File Structure
+        run: ls -R playwright-results/
 
       - name: Send Email Report
         run: node scripts/generateEmailReport.js
         env:
-          # Make sure these are configured in GitHub Settings -> Secrets
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          TEST_ENV: 'live'

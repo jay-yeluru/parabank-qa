@@ -12,11 +12,15 @@ on:
           - all
           - ui
           - api
-      environment:
-        description: 'Environment to run against'
+      test_env:
+        description: 'Select the environment tier'
         required: true
-        default: 'https://parabank.parasoft.com'
-        type: string
+        default: 'stage'
+        type: choice
+        options:
+          - stage
+          - beta
+          - prod
 
 permissions:
   contents: write
@@ -52,7 +56,7 @@ jobs:
             npm run test:api
           fi
         env:
-          BASE_URL: ${{ github.event.inputs.environment || secrets.BASE_URL }}
+          TEST_ENV: ${{ github.event.inputs.test_env }}
 
       - name: Get Allure history
         uses: actions/checkout@v4
@@ -133,7 +137,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: manual-playwright-results
-          path: .
+          path: manual-playwright-results
+
+      - name: Debug File Structure
+        run: ls -R manual-playwright-results/
 
       - name: Send Email Report
         run: node scripts/generateEmailReport.js
@@ -141,3 +148,4 @@ jobs:
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          TEST_ENV: ${{ github.event.inputs.test_env }}

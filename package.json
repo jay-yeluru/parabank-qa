@@ -10,6 +10,8 @@
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
     "test:report": "playwright show-report",
+    "test:stage": "TEST_ENV=stage npx playwright test",
+    "test:beta": "TEST_ENV=beta npx playwright test",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
