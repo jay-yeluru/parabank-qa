@@ -1,41 +1,30 @@
 // @ts-check
 const { test } = require('../../fixtures/pom-fixture');
-const { TestDataManager } = require('../../utils/TestDataManager');
 
 test.describe('ParaBank - Global Navigation (Step 4) @ui @navigation', () => {
-  const dataManager = new TestDataManager();
-  let userData;
 
-  // Use beforeAll to ensure a user exists for this spec if needed
-  test.beforeAll(async ({ browser }) => {
-    const page = await browser.newPage();
-    try {
-      const { LoginPage } = require('../../pages/LoginPage');
-      const { RegisterPage } = require('../../pages/RegisterPage');
-      const lp = new LoginPage(page);
-      const rp = new RegisterPage(page);
-      userData = dataManager.generateFreshUser();
-
-      await lp.navigate();
-      await lp.clickRegister();
-      await rp.register(userData);
-      await rp.verifyRegistrationSuccess(userData.username);
-    } finally {
-      await page.close();
-    }
-  });
-
-  test('TC-01 - Global Navigation Menu Visibility', async ({ poManager }) => {
+  test('TC-01 - Global Navigation Menu Visibility and Links', async ({ poManager, registeredUser, dataManager }) => {
     const loginPage = poManager.getLoginPage();
     const homePage = poManager.getHomePage();
 
-    // 4. Verify global navigation menu works as expected (Step 4)
-    await loginPage.navigate();
-    await loginPage.login(userData.username, userData.password);
-    await loginPage.verifySuccessfulLogin();
+    await test.step('Login to access global navigation', async () => {
+      await loginPage.navigate();
+      await loginPage.login(registeredUser.username, registeredUser.password);
+      await loginPage.verifySuccessfulLogin();
+    });
 
-    await homePage.verifyGlobalNavMenu();
-    await homePage.clickNavLink('Accounts Overview');
-    await homePage.verifyNavigatedTo(/overview/);
+    await test.step('Verify all navigation menu links are visible', async () => {
+      await homePage.verifyGlobalNavMenu();
+    });
+
+    const navItems = dataManager.getNavItems();
+
+    for (const item of navItems) {
+
+      await test.step(`Click and verify navigation to: ${item.name}`, async () => {
+        await homePage.clickNavLink(item.name);
+        await homePage.verifyNavigatedTo(item.expectedUrl);
+      });
+    }
   });
 });

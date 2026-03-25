@@ -26,17 +26,20 @@ test.describe('ParaBank - Fund Transfers and Bill Payments (Step 7 & 8) @ui @tra
 
     // 7. Transfer funds (Step 7: FROM account created in step 5 TO another account)
     await transferPage.navigate();
+    const transferAmount = dataManager.getTransferAmount();
     await transferPage.transferFunds(
-      dataManager.getTransferAmount(),
+      transferAmount,
       savingsAccountId,
       defaultAccountId
     );
-    await transferPage.verifyTransferSuccess();
+    await transferPage.verifyTransferSuccess(transferAmount);
 
     // 8. Pay the bill (Step 8: with account created in step 5)
-    const billData = dataManager.generateBillData('50.00', 'TRANSACTIONS_SPEC');
+    const billData = dataManager.generateBillData(undefined, 'UI');
+
     await billPayPage.navigate();
     await billPayPage.payBill(billData, savingsAccountId);
-    await billPayPage.verifyBillPaymentSuccess(billData.payeeName);
+    await billPayPage.verifyBillPaymentSuccess(billData);
+
   });
 });

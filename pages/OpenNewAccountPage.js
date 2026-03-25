@@ -14,7 +14,9 @@ class OpenNewAccountPage {
   }
 
   async navigate() {
-    await this.page.goto('/parabank/openaccount.htm');
+    await test.step('Navigate to Open New Account page', async () => {
+      await this.page.goto('/parabank/openaccount.htm');
+    });
   }
 
   /**
@@ -23,27 +25,36 @@ class OpenNewAccountPage {
    * @returns {Promise<string>} the new account number
    */
   async openAccount(accountType = 'SAVINGS') {
-    // Wait for the from-account dropdown to populate
-    await this.fromAccountSelect.waitFor({ state: 'visible' });
-    await expect(this.fromAccountSelect.locator('option')).not.toHaveCount(0);
+    return await test.step(`Open a new ${accountType} account`, async () => {
+      // Wait for the from-account dropdown to populate
+      await this.fromAccountSelect.waitFor({ state: 'visible' });
+      await expect(this.fromAccountSelect.locator('option')).not.toHaveCount(0);
 
-    // Select account type
-    await this.accountTypeSelect.selectOption({ label: accountType });
+      // Select account type
+      await this.accountTypeSelect.selectOption({ label: accountType });
 
-    await this.openAccountButton.click();
+      await this.openAccountButton.click();
 
-    // Wait for result
-    await expect(this.successHeader).toContainText('Account Opened!', { timeout: 15000 });
-    await expect(this.newAccountId).not.toBeEmpty({ timeout: 15000 });
+      // Wait for result and ensure the new account value is actually populated
+      // Parabank sometimes shows the link but with no text for a split second
+      await expect(this.successHeader).toContainText('Account Opened!', { timeout: 15000 });
+      
+      // Wait specifically for the link to contain a digit (the account number)
+      await expect(this.newAccountId).toContainText(/\d+/, { timeout: 15000 });
 
-    const newAccountNumber = await this.newAccountId.textContent();
-    return newAccountNumber.trim();
+      const newAccountNumber = await this.newAccountId.textContent();
+      return newAccountNumber.trim();
+    });
   }
 
   async verifyValidAccountIdFormat(accountId) {
-    expect(accountId).toBeTruthy();
-    expect(accountId).toMatch(/\d+/);
+    await test.step(`Verify account ID format: ${accountId}`, async () => {
+      expect(accountId).toBeTruthy();
+      expect(accountId).toMatch(/\d+/);
+    });
   }
 }
+
+const { test } = require('@playwright/test');
 
 module.exports = { OpenNewAccountPage };

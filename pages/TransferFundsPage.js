@@ -15,7 +15,9 @@ class TransferFundsPage {
   }
 
   async navigate() {
-    await this.page.goto('/parabank/transfer.htm');
+    await test.step('Navigate to Transfer Funds page', async () => {
+      await this.page.goto('/parabank/transfer.htm');
+    });
   }
 
   /**
@@ -25,28 +27,38 @@ class TransferFundsPage {
    * @param {string} toAccountId
    */
   async transferFunds(amount, fromAccountId, toAccountId) {
-    await this.fromAccountSelect.waitFor({ state: 'visible' });
+    await test.step(`Transfer $${amount} from account ${fromAccountId} to ${toAccountId}`, async () => {
+      await this.fromAccountSelect.waitFor({ state: 'visible' });
 
-    // Wait for the specific account options to be populated by Angular XHR
-    await expect(this.fromAccountSelect.locator(`option[value="${fromAccountId}"]`)).toHaveCount(
-      1,
-      { timeout: 15000 }
-    );
-    await expect(this.toAccountSelect.locator(`option[value="${toAccountId}"]`)).toHaveCount(1, {
-      timeout: 15000,
+      // Wait for the specific account options to be populated by Angular XHR
+      await expect(this.fromAccountSelect.locator(`option[value="${fromAccountId}"]`)).toHaveCount(
+        1,
+        { timeout: 15000 }
+      );
+      await expect(this.toAccountSelect.locator(`option[value="${toAccountId}"]`)).toHaveCount(1, {
+        timeout: 15000,
+      });
+
+      await this.amountInput.fill(amount);
+      await this.fromAccountSelect.selectOption({ value: fromAccountId });
+      await this.toAccountSelect.selectOption({ value: toAccountId });
+      await this.transferButton.click();
+
+      await expect(this.successHeader).toContainText('Transfer Complete!', { timeout: 15000 });
     });
-
-    await this.amountInput.fill(amount);
-    await this.fromAccountSelect.selectOption({ value: fromAccountId });
-    await this.toAccountSelect.selectOption({ value: toAccountId });
-    await this.transferButton.click();
-
-    await expect(this.successHeader).toContainText('Transfer Complete!', { timeout: 15000 });
   }
 
-  async verifyTransferSuccess() {
-    await expect(this.successHeader).toContainText('Transfer Complete!');
+  async verifyTransferSuccess(amount) {
+    await test.step(`Verify transfer of $${amount} was successful`, async () => {
+      await expect(this.successHeader).toContainText('Transfer Complete!');
+      if (amount) {
+        // The result message often contains the amount in a span with ng-binding
+        await expect(this.page.locator('#showResult')).toContainText(`$${amount}`);
+      }
+    });
   }
 }
+
+const { test } = require('@playwright/test');
 
 module.exports = { TransferFundsPage };

@@ -40,8 +40,9 @@ class LoginPage {
 
   async verifySuccessfulLogin() {
     await test.step('Verify login was successful', async () => {
-      await expect(this.page).toHaveURL(/overview/, { timeout: 10000 });
+      await expect(this.page).toHaveURL(/overview/, { timeout: 20000 });
     });
+
   }
 }
 

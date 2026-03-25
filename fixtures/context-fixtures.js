@@ -17,7 +17,6 @@ const { coreFixtures } = require('./core-fixtures');
 /**
  * @typedef {object} ContextFixtures
  * @property {UserData} registeredUser
- * @property {void} cleanDb
  * @property {object} savingsAccount
  * @property {string} savingsAccount.accountId
  * @property {UserData} savingsAccount.userData
@@ -25,14 +24,6 @@ const { coreFixtures } = require('./core-fixtures');
 
 /** @type {import('@playwright/test').TestType<import('@playwright/test').PlaywrightTestArgs & import('@playwright/test').PlaywrightTestOptions & ContextFixtures & import('./core-fixtures').CoreFixtures, import('@playwright/test').PlaywrightWorkerArgs & import('@playwright/test').PlaywrightWorkerOptions>} */
 const contextFixtures = coreFixtures.extend({
-  // Database cleanup fixture - auto-runs if needed
-  cleanDb: async ({ page, dataManager }, use) => {
-    await page.goto(dataManager.getAdminEndpoint());
-    await page.getByRole('button', { name: 'Clean', exact: true }).click();
-    await page.waitForTimeout(1000); // DB settle time
-    await use();
-  },
-
   // Registered User fixture
   registeredUser: async ({ poManager, dataManager }, use) => {
     const userData = dataManager.generateFreshUser();

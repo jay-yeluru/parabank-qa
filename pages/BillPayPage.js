@@ -26,7 +26,9 @@ class BillPayPage {
   }
 
   async navigate() {
-    await this.page.goto('/parabank/billpay.htm');
+    await test.step('Navigate to Bill Pay page', async () => {
+      await this.page.goto('/parabank/billpay.htm');
+    });
   }
 
   /**
@@ -35,32 +37,40 @@ class BillPayPage {
    * @param {string} fromAccountId
    */
   async payBill(billData, fromAccountId) {
-    await this.payeeName.fill(billData.payeeName);
-    await this.payeeAddress.fill(billData.street);
-    await this.payeeCity.fill(billData.city);
-    await this.payeeState.fill(billData.state);
-    await this.payeeZipCode.fill(billData.zipCode);
-    await this.payeePhone.fill(billData.phone);
-    await this.payeeAccountNumber.fill(billData.accountNumber);
-    await this.verifyAccountNumber.fill(billData.accountNumber);
-    await this.amount.fill(billData.amount);
+    await test.step(`Submit payment of $${billData.amount} for ${billData.payeeName}`, async () => {
+      await this.payeeName.fill(billData.payeeName);
+      await this.payeeAddress.fill(billData.street);
+      await this.payeeCity.fill(billData.city);
+      await this.payeeState.fill(billData.state);
+      await this.payeeZipCode.fill(billData.zipCode);
+      await this.payeePhone.fill(billData.phone);
+      await this.payeeAccountNumber.fill(billData.accountNumber);
+      await this.verifyAccountNumber.fill(billData.accountNumber);
+      await this.amount.fill(billData.amount);
 
-    await this.fromAccountSelect.waitFor({ state: 'visible' });
-    await this.fromAccountSelect.selectOption({ value: fromAccountId });
+      await this.fromAccountSelect.waitFor({ state: 'visible' });
+      await this.fromAccountSelect.selectOption({ value: fromAccountId });
 
-    await this.sendPaymentButton.click();
+      await this.sendPaymentButton.click();
 
-    await expect(this.successHeader).toContainText('Bill Payment Complete', {
-      timeout: 15000,
+      await expect(this.successHeader).toContainText('Bill Payment Complete', {
+        timeout: 15000,
+      });
     });
   }
 
-  async verifyBillPaymentSuccess(payeeName) {
-    await expect(this.successHeader).toContainText('Bill Payment Complete', { timeout: 15000 });
-    if (payeeName) {
-      await expect(this.page.locator('#billpayResult')).toContainText(payeeName);
-    }
+  async verifyBillPaymentSuccess(billData) {
+    await test.step(`Verify bill payment for ${billData.payeeName} was successful`, async () => {
+      await expect(this.successHeader).toContainText('Bill Payment Complete', { timeout: 15000 });
+      // The billpayResult container has several spans with ng-binding for payee name, amount, and account.
+      const resultContainer = this.page.locator('#billpayResult');
+      await expect(resultContainer).toContainText(billData.payeeName);
+      await expect(resultContainer).toContainText(`$${billData.amount}`);
+      // Note: ParaBank UI confirms the 'from' account, not the 'payee' account number
+    });
   }
 }
+
+const { test } = require('@playwright/test');
 
 module.exports = { BillPayPage };

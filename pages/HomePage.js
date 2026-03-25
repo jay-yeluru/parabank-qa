@@ -22,32 +22,44 @@ class HomePage {
   }
 
   async verifyLoggedIn(username) {
-    await expect(this.page).toHaveURL(/overview/);
-    await expect(this.welcomeMessage).toContainText(username);
+    await test.step(`Verify user ${username} is logged in`, async () => {
+      await expect(this.page).toHaveURL(/overview/);
+      await expect(this.welcomeMessage).toContainText(username);
+    });
   }
 
   async verifyGlobalNavMenu() {
-    await expect(this.navOpenNewAccount).toBeVisible();
-    await expect(this.navAccountsOverview).toBeVisible();
-    await expect(this.navTransferFunds).toBeVisible();
-    await expect(this.navBillPay).toBeVisible();
-    await expect(this.navFindTransactions).toBeVisible();
-    await expect(this.navUpdateContactInfo).toBeVisible();
-    await expect(this.navRequestLoan).toBeVisible();
-    await expect(this.navLogout).toBeVisible();
+    await test.step('Verify all navigation menu links are visible', async () => {
+      await expect(this.navOpenNewAccount).toBeVisible();
+      await expect(this.navAccountsOverview).toBeVisible();
+      await expect(this.navTransferFunds).toBeVisible();
+      await expect(this.navBillPay).toBeVisible();
+      await expect(this.navFindTransactions).toBeVisible();
+      await expect(this.navUpdateContactInfo).toBeVisible();
+      await expect(this.navRequestLoan).toBeVisible();
+      await expect(this.navLogout).toBeVisible();
+    });
   }
 
   async clickNavLink(linkName) {
-    await this.page.getByRole('link', { name: linkName }).click();
+    await test.step(`Click navigation link: ${linkName}`, async () => {
+      await this.page.getByRole('link', { name: linkName }).click();
+    });
   }
 
   async verifyNavigatedTo(urlRegex) {
-    await expect(this.page).toHaveURL(urlRegex, { timeout: 10000 });
+    await test.step(`Verify navigation to URL matching: ${urlRegex}`, async () => {
+      await expect(this.page).toHaveURL(urlRegex, { timeout: 10000 });
+    });
   }
 
   async logout() {
-    await this.navLogout.click();
+    await test.step('Logout from application', async () => {
+      await this.navLogout.click();
+    });
   }
 }
+
+const { test } = require('@playwright/test');
 
 module.exports = { HomePage };

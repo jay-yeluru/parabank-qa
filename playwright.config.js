@@ -27,15 +27,21 @@ module.exports = defineConfig({
   },
   projects: [
     {
+      name: 'setup',
+      testDir: './tests/setup',
+      testMatch: /global\.setup\.js/,
+    },
+    {
       name: 'UI',
       testDir: './tests/ui',
+      dependencies: ['setup'],
       use: { ...devices['Desktop Chrome'] },
     },
     {
       name: 'API',
       testDir: './tests/api',
-      // No more dependency on UI! Both projects can now run in parallel.
-      use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup'],
+      use: {},
     },
   ],
   outputDir: 'test-results/',

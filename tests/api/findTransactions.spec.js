@@ -3,11 +3,11 @@ const { ApiResponsePage } = require('../../pages/ApiResponsePage');
 
 test.describe('ParaBank - Find Transactions API (Self-Contained) @api @transactions', () => {
   test('TC-API-01 - Find transactions by amount returns correct data @smoke', async ({
-    request,
     apiUserClient,
-    apiData,
+    billPayApiData,
+    dataManager
   }) => {
-    const { savingsAccountId, amount } = apiData;
+    const { savingsAccountId, amount, payeeName } = billPayApiData;
 
     // 1. Call API: GET /accounts/{id}/transactions/amount/{amount}
     const response = await apiUserClient.findTransactionsByAmount(savingsAccountId, amount);
@@ -28,16 +28,19 @@ test.describe('ParaBank - Find Transactions API (Self-Contained) @api @transacti
       transaction,
       savingsAccountId,
       amount,
-      'Credit',
-      'Deposit'
+      dataManager.getTransactionTypes().DEBIT,
+      `${dataManager.getBillPaymentPattern()} ${payeeName}`
     );
+
+
+
   });
 
   test('TC-API-02 - Find transactions by non-existent amount', async ({
     apiUserClient,
-    apiData,
+    billPayApiData,
   }) => {
-    const { savingsAccountId } = apiData;
+    const { savingsAccountId } = billPayApiData;
 
     const fakeAmount = '999999.99';
     const response = await apiUserClient.findTransactionsByAmount(savingsAccountId, fakeAmount);

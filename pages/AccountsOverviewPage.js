@@ -12,14 +12,18 @@ class AccountsOverviewPage {
   }
 
   async navigate() {
-    await this.page.goto('/parabank/overview.htm');
+    await test.step('Navigate to Accounts Overview', async () => {
+      await this.page.goto('/parabank/overview.htm');
+    });
   }
 
   async verifyPageLoaded() {
-    await expect(this.pageHeader).toContainText('Accounts Overview');
-    await expect(this.accountsTable).toBeVisible();
-    // Wait for the table to populate with at least one linked account
-    await expect(this.accountsTable.locator('tbody tr a').first()).toBeVisible({ timeout: 15000 });
+    await test.step('Verify Accounts Overview page loaded', async () => {
+      await expect(this.pageHeader).toContainText('Accounts Overview');
+      await expect(this.accountsTable).toBeVisible();
+      // Wait for the table to populate with at least one linked account
+      await expect(this.accountsTable.locator('tbody tr a').first()).toBeVisible({ timeout: 15000 });
+    });
   }
 
   /**
@@ -27,27 +31,29 @@ class AccountsOverviewPage {
    * @returns {Promise<Array<{accountId: string, balance: string, availableAmount: string}>>}
    */
   async getAccountRows() {
-    // Ensure table populated before pulling text
-    await this.accountsTable
-      .locator('tbody tr a')
-      .first()
-      .waitFor({ state: 'visible', timeout: 15000 });
+    return await test.step('Read all account rows from table', async () => {
+      // Ensure table populated before pulling text
+      await this.accountsTable
+        .locator('tbody tr a')
+        .first()
+        .waitFor({ state: 'visible', timeout: 15000 });
 
-    // Only capture rows that contain a link to avoid footers/totals sometimes rendered in tbody
-    const rows = this.accountsTable.locator('tbody tr').filter({ has: this.page.locator('a') });
-    const count = await rows.count();
-    const accounts = [];
+      // Only capture rows that contain a link to avoid footers/totals sometimes rendered in tbody
+      const rows = this.accountsTable.locator('tbody tr').filter({ has: this.page.locator('a') });
+      const count = await rows.count();
+      const accounts = [];
 
-    for (let i = 0; i < count; i++) {
-      const row = rows.nth(i);
-      const cells = row.locator('td');
-      const accountId = (await cells.nth(0).textContent()).trim();
-      const balance = (await cells.nth(1).textContent()).trim();
-      const availableAmount = (await cells.nth(2).textContent()).trim();
-      accounts.push({ accountId, balance, availableAmount });
-    }
+      for (let i = 0; i < count; i++) {
+        const row = rows.nth(i);
+        const cells = row.locator('td');
+        const accountId = (await cells.nth(0).textContent()).trim();
+        const balance = (await cells.nth(1).textContent()).trim();
+        const availableAmount = (await cells.nth(2).textContent()).trim();
+        accounts.push({ accountId, balance, availableAmount });
+      }
 
-    return accounts;
+      return accounts;
+    });
   }
 
   /**
@@ -55,30 +61,38 @@ class AccountsOverviewPage {
    * @param {string} accountNumber
    */
   async verifyAccountExists(accountNumber) {
-    const accountLink = this.page.getByRole('link', { name: accountNumber });
-    await expect(accountLink).toBeVisible();
+    await test.step(`Verify account ${accountNumber} exists in overview`, async () => {
+      const accountLink = this.page.getByRole('link', { name: accountNumber });
+      await expect(accountLink).toBeVisible();
+    });
   }
 
   /**
    * Verifies that balance columns are non-empty and look like currency values.
    */
   async verifyHasAccounts() {
-    const rows = await this.getAccountRows();
-    expect(rows.length).toBeGreaterThan(0);
+    await test.step('Verify at least one account exists', async () => {
+      const rows = await this.getAccountRows();
+      expect(rows.length).toBeGreaterThan(0);
+    });
   }
 
   /**
    * Verifies that balance columns are non-empty and look like currency values.
    */
   async verifyBalancesDisplayed() {
-    const rows = await this.getAccountRows();
-    expect(rows.length).toBeGreaterThan(0);
+    await test.step('Verify currency formatting of account balances', async () => {
+      const rows = await this.getAccountRows();
+      expect(rows.length).toBeGreaterThan(0);
 
-    for (const row of rows) {
-      expect(row.balance).toMatch(/\$[\d,]+\.\d{2}/);
-      expect(row.availableAmount).toMatch(/\$[\d,]+\.\d{2}/);
-    }
+      for (const row of rows) {
+        expect(row.balance).toMatch(/\$[\d,]+\.\d{2}/);
+        expect(row.availableAmount).toMatch(/\$[\d,]+\.\d{2}/);
+      }
+    });
   }
 }
+
+const { test } = require('@playwright/test');
 
 module.exports = { AccountsOverviewPage };

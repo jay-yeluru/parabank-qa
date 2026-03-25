@@ -15,48 +15,50 @@ const apiFixtures = contextFixtures.extend({
     await use(apiClient);
   },
 
-  // Self-contained data fixture for API tests
-  apiData: async ({ request, dataManager, registeredUser }, use) => {
-    const apiClient = new ApiClient(request, registeredUser.username, registeredUser.password);
+  // Self-contained data fixture for API tests testing Bill Pay
+  billPayApiData: async ({ request, savingsAccount, dataManager }, use) => {
+    const { userData, accountId } = savingsAccount;
+    const apiClient = new ApiClient(request, userData.username, userData.password);
 
-    // 1. Get Customer ID via login API
-    const loginResponse = await request.get(
-      `/parabank/services/bank/login/${registeredUser.username}/${registeredUser.password}`,
-      {
-        headers: { Accept: 'application/json' },
-      }
-    );
-    const customer = await loginResponse.json();
-    const customerId = customer.id;
+    // Use dataManager instead of hardcoding values
+    const billData = dataManager.generateBillData(undefined, 'API');
+    const { amount, payeeName } = billData;
 
-    // 2. Get Customer's accounts to find an initial one
-    const accountsResponse = await request.get(
-      `/parabank/services/bank/customers/${customerId}/accounts`,
-      {
-        headers: { Accept: 'application/json' },
-      }
-    );
-    const accounts = await accountsResponse.json();
-    const initialAccountId = accounts[0].id; // ParaBank usually returns an array directly
-
-    // 3. Create a new "SAVINGS" account via API
-    const createResponse = await apiClient.createAccount(customerId, initialAccountId, 'SAVINGS');
-    const newAccount = await createResponse.json();
-
-    // 3. Perform a deposit/transfer to have a transaction to search for
-    const amount = '123.45';
-    await request.post(`/parabank/services/bank/deposit`, {
-      params: { accountId: newAccount.id, amount: amount },
+    const billPayRes = await request.post(`/parabank/services/bank/billpay`, {
+      params: { 
+        accountId: accountId, 
+        amount: amount
+      },
+      data: {
+        name: payeeName,
+        address: {
+          street: billData.street,
+          city: billData.city,
+          state: billData.state,
+          zipCode: billData.zipCode
+        },
+        phoneNumber: billData.phone,
+        accountNumber: billData.accountNumber
+      },
       headers: {
-        Accept: 'application/json',
-        Authorization: apiClient.getAuthHeader(),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': apiClient.getAuthHeader(),
       },
     });
 
+    if (!billPayRes.ok()) {
+      throw new Error(`Bill pay failed with status ${billPayRes.status()}: ${await billPayRes.text()}`);
+    }
+
+    // Give DB a moment to record the transaction
+    await new Promise(r => setTimeout(r, 1000));
+
     await use({
-      userData: registeredUser,
-      savingsAccountId: newAccount.id,
+      userData: userData,
+      savingsAccountId: accountId,
       amount: amount,
+      payeeName: payeeName,
     });
   },
 });

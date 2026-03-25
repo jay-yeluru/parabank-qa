@@ -36,6 +36,21 @@ class TestDataManager {
     this.types = CONSTANTS.ACCOUNT_TYPES;
     this.messages = CONSTANTS.MESSAGES;
     this.endpoints = CONSTANTS.ENDPOINTS;
+    this.navItems = CONSTANTS.NAV_ITEMS;
+    this.transactionTypes = CONSTANTS.TRANSACTION_TYPES;
+    this.patterns = CONSTANTS.DESCRIPTION_PATTERNS;
+  }
+
+  getNavItems() {
+    return this.navItems;
+  }
+
+  getTransactionTypes() {
+    return this.transactionTypes;
+  }
+
+  getBillPaymentPattern() {
+    return this.patterns.BILL_PAYMENT;
   }
 
   getAdminEndpoint() {

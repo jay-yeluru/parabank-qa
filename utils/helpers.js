@@ -14,7 +14,8 @@ function randomString(length = 8) {
  * @returns {string}
  */
 function generateUsername() {
-  return `user_${randomString(6)}`;
+  const workerIndex = process.env.TEST_PARALLEL_INDEX || '0';
+  return `user_${workerIndex}_${randomString(6)}`;
 }
 
 /**
