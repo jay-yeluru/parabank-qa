@@ -1,0 +1,51 @@
+const { test } = require('../../fixtures/api-fixtures');
+const { ApiResponsePage } = require('../../pages/ApiResponsePage');
+
+test.describe('ParaBank - Find Transactions API (Self-Contained)', () => {
+
+  test('TC-API-01 - Find transactions by amount returns correct data', async ({ request, apiUserClient, apiData }) => {
+    const { savingsAccountId, amount } = apiData;
+    
+    // 1. Call API: GET /accounts/{id}/transactions/amount/{amount}
+    const response = await apiUserClient.findTransactionsByAmount(savingsAccountId, amount);
+    
+    // VERIFY: HTTP 200 (Step 1 API)
+    const apiResponse = new ApiResponsePage(response);
+    await apiResponse.verifyStatus(200);
+
+    const body = await response.json();
+    console.log('API Response body:', JSON.stringify(body, null, 2));
+
+    // VERIFY: Content (Step 2 API)
+    await apiResponse.verifyIsArray(body);
+    await apiResponse.verifyArrayMinLength(body, 1);
+
+    const transaction = body[0];
+    await apiResponse.verifyTransactionDetails(
+      transaction, 
+      savingsAccountId, 
+      amount, 
+      'Credit', 
+      'Deposit' 
+    );
+  });
+
+  test('TC-API-02 - Find transactions by non-existent amount', async ({ apiUserClient, apiData }) => {
+    const { savingsAccountId } = apiData;
+    
+    const fakeAmount = '999999.99';
+    const response = await apiUserClient.findTransactionsByAmount(savingsAccountId, fakeAmount);
+    
+    const apiResponse = new ApiResponsePage(response);
+    await apiResponse.verifyStatusOneOf([200, 404]);
+
+    if (response.status() === 200) {
+      const body = await response.json();
+      await apiResponse.verifyArrayEmpty(body);
+    }
+  });
+});
+
+
+
+

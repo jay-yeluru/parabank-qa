@@ -8,11 +8,11 @@ function randomString(length = 8) {
 }
 
 /**
- * Generates a unique username prefixed with 'user_'.
+ * Generates a unique username formatted as user_test_timestamp.
  * @returns {string}
  */
 function generateUsername() {
-  return `user_${randomString(8)}_${Date.now()}`;
+  return `user_${randomString(6)}`;
 }
 
 /**

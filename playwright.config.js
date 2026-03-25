@@ -4,14 +4,18 @@ require('dotenv').config();
 
 module.exports = defineConfig({
   testDir: './tests',
-  fullyParallel: false,
+
+
+  fullyParallel: true, // Independent tests can now run in parallel
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
-  workers: 1,
+  retries: process.env.CI ? 2 : 1, // Add retries for stability with more workers
+  workers: process.env.CI ? 2 : undefined, // Use all CPU cores locally
+
   reporter: [
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['list'],
     ['junit', { outputFile: 'test-results/results.xml' }],
+    ['json', { outputFile: 'test-results/report.json' }]
   ],
   use: {
     baseURL: process.env.BASE_URL || 'https://parabank.parasoft.com',
@@ -22,9 +26,17 @@ module.exports = defineConfig({
   },
   projects: [
     {
-      name: 'chromium',
+      name: 'UI',
+      testDir: './tests/ui',
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      name: 'API',
+      testDir: './tests/api',
+      // No more dependency on UI! Both projects can now run in parallel.
+      use: { ...devices['Desktop Chrome'] },
+    },
+
   ],
   outputDir: 'test-results/',
 });

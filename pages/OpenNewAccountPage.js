@@ -19,7 +19,7 @@ class OpenNewAccountPage {
 
   /**
    * Opens a new account of the given type.
-   * @param {'CHECKING'|'SAVINGS'} accountType
+   * @param {string} accountType
    * @returns {Promise<string>} the new account number
    */
   async openAccount(accountType = 'SAVINGS') {
@@ -34,9 +34,15 @@ class OpenNewAccountPage {
 
     // Wait for result
     await expect(this.successHeader).toContainText('Account Opened!', { timeout: 15000 });
+    await expect(this.newAccountId).not.toBeEmpty({ timeout: 15000 });
 
     const newAccountNumber = await this.newAccountId.textContent();
     return newAccountNumber.trim();
+  }
+
+  async verifyValidAccountIdFormat(accountId) {
+    expect(accountId).toBeTruthy();
+    expect(accountId).toMatch(/\d+/);
   }
 }
 

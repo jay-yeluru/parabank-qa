@@ -31,6 +31,10 @@ class LoginPage {
   async clickRegister() {
     await this.registerLink.click();
   }
+
+  async verifySuccessfulLogin() {
+    await expect(this.page).toHaveURL(/overview/, { timeout: 10000 });
+  }
 }
 
 module.exports = { LoginPage };

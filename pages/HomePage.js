@@ -38,9 +38,11 @@ class HomePage {
   }
 
   async clickNavLink(linkName) {
-    const link = this.page.getByRole('link', { name: linkName });
-    await expect(link).toBeVisible();
-    await link.click();
+    await this.page.getByRole('link', { name: linkName }).click();
+  }
+
+  async verifyNavigatedTo(urlRegex) {
+    await expect(this.page).toHaveURL(urlRegex, { timeout: 10000 });
   }
 
   async logout() {

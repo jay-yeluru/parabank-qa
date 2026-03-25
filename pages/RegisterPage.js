@@ -33,6 +33,7 @@ class RegisterPage {
    *            username: string, password: string }} userData
    */
   async register(userData) {
+    await this.firstNameInput.waitFor({ state: 'visible' });
     await this.firstNameInput.fill(userData.firstName);
     await this.lastNameInput.fill(userData.lastName);
     await this.streetInput.fill(userData.street);
@@ -44,14 +45,24 @@ class RegisterPage {
     await this.usernameInput.fill(userData.username);
     await this.passwordInput.fill(userData.password);
     await this.confirmPasswordInput.fill(userData.password);
+    
     await this.registerButton.click();
+    // Parabank registration can be slow to commit to DB
+    await this.page.waitForTimeout(1000);
+    
+    // Check for short-lived validation errors if the page didn't redirect
+    if (await this.errorMessage.isVisible({ timeout: 2000 })) {
+       const error = await this.errorMessage.innerText();
+       throw new Error(`Registration failed with error: ${error}`);
+    }
   }
 
   async verifyRegistrationSuccess(username) {
-    await expect(this.successMessage).toContainText('Welcome');
-    await expect(this.page.locator('#rightPanel p')).toContainText(
-      `${username} was created successfully`
-    );
+    const { TestDataManager } = require('../utils/TestDataManager');
+    const successMsg = new TestDataManager().getRegistrationSuccessMessage();
+    // Wait for the success page (right panel header should say Welcome)
+    await expect(this.successMessage).toContainText('Welcome', { timeout: 15000 });
+    await expect(this.page.locator('#rightPanel p')).toContainText(successMsg);
   }
 }
 

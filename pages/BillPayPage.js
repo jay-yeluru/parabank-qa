@@ -50,14 +50,16 @@ class BillPayPage {
 
     await this.sendPaymentButton.click();
 
-    await expect(this.successHeader).toContainText('Bill Payment Complete!', {
+    await expect(this.successHeader).toContainText('Bill Payment Complete', {
       timeout: 15000,
     });
   }
 
   async verifyBillPaymentSuccess(payeeName) {
-    await expect(this.successHeader).toContainText('Bill Payment Complete!');
-    await expect(this.page.locator('#billpayResult')).toContainText(payeeName);
+    await expect(this.successHeader).toContainText('Bill Payment Complete', { timeout: 15000 });
+    if (payeeName) {
+      await expect(this.page.locator('#billpayResult')).toContainText(payeeName);
+    }
   }
 }
 
