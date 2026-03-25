@@ -1,0 +1,10 @@
+API Response body: [
+  {
+    "id": 29128,
+    "accountId": 27441,
+    "type": "Credit",
+    "date": 1774396800000,
+    "amount": 123.45,
+    "description": "Deposit via Web Service"
+  }
+]
