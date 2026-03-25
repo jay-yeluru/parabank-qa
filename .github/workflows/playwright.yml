@@ -74,34 +74,8 @@ jobs:
             allure-results/
           retention-days: 30
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-        if: always()
-
-      - name: Upload artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v3
-        if: always()
-        with:
-          path: allure-report/
-
-  deploy-pages:
-    needs: test
-    if: always()
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write # Needed for pushing history
-      pages: write
-      id-token: write
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
   send-email:
-    needs: [test, deploy-pages]
+    needs: [test]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
