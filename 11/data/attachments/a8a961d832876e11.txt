@@ -1,0 +1,10 @@
+API Response body: [
+  {
+    "id": 15475,
+    "accountId": 14232,
+    "type": "Debit",
+    "date": 1774396800000,
+    "amount": 50,
+    "description": "Bill Payment to Electricity Company API"
+  }
+]
