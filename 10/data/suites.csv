@@ -1,0 +1,8 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","30141","TC-API-02 - Find transactions by non-existent amount","API","Wed Mar 25 11:01:33 UTC 2026","broken","Wed Mar 25 11:02:04 UTC 2026","ParaBank - Find Transactions API (Self-Contained) @api @transactions","api/findTransactions.spec.js","",""
+"","23038","TC-01 - Open New Savings Account and Verify Overview @smoke","UI","Wed Mar 25 10:58:32 UTC 2026","failed","Wed Mar 25 10:58:55 UTC 2026","ParaBank - Accounts Management (Step 5 & 6) @ui @accounts","ui/accounts.spec.js","",""
+"","30141","TC-01 - Transfer Funds and Pay Bill @smoke","UI","Wed Mar 25 10:59:59 UTC 2026","broken","Wed Mar 25 11:00:29 UTC 2026","ParaBank - Fund Transfers and Bill Payments (Step 7 & 8) @ui @transactions","ui/transactions.spec.js","",""
+"","30135","TC-API-01 - Find transactions by amount returns correct data @smoke","API","Wed Mar 25 11:01:11 UTC 2026","broken","Wed Mar 25 11:01:41 UTC 2026","ParaBank - Find Transactions API (Self-Contained) @api @transactions","api/findTransactions.spec.js","",""
+"","23012","TC-01 - User Registration and Login @smoke","UI","Wed Mar 25 10:58:32 UTC 2026","failed","Wed Mar 25 10:58:55 UTC 2026","ParaBank - User Authentication (Step 2 & 3) @ui @auth","ui/auth.spec.js","",""
+"","335","Global Database Setup/Cleanup","setup","Wed Mar 25 10:57:39 UTC 2026","passed","Wed Mar 25 10:57:40 UTC 2026","","setup/global.setup.js","",""
+"","22872","TC-01 - Global Navigation Menu Visibility and Links","UI","Wed Mar 25 10:59:44 UTC 2026","failed","Wed Mar 25 11:00:07 UTC 2026","ParaBank - Global Navigation (Step 4) @ui @navigation","ui/navigation.spec.js","",""
