@@ -35,7 +35,7 @@ The framework covers both UI and API test scenarios, ensuring the complete funct
 - **Rich Reporting & Allure**:
   - **Allure Reports**: Historical trends, nested categories, and clean execution steps using `test.step`.
   - **GitHub Pages**: Automated deployment of Allure reports with persistent cross-run history.
-  - **Email Reports**: Stats and pass/fail notifications via SendGrid.
+  - **Email Reports**: Stats and pass/fail notifications via **Resend**, featuring an **Allure Standalone HTML** attachment for full offline interactivity within the email.
 - **Code Quality**: Prettier integration for consistent formatting across the team.
 
 ## 🏗️ Implementation Architecture
@@ -91,9 +91,8 @@ The pipeline is configured for:
 ### Secrets Configuration
 Configure these in GitHub Settings -> Secrets and variables -> Actions:
 - `BASE_URL`: The default ParaBank URL.
-- `SENDGRID_API_KEY`: API key for email delivery.
-- `EMAIL_FROM`: Sender email.
-- `EMAIL_TO`: Recipient email.
+- `RESEND_API_KEY`: API key for email delivery via Resend.
+- `EMAIL_TO`: Recipient email (must be your Resend account email for free tier).
 
 ## ⚖️ License
 

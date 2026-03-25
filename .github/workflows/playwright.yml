@@ -71,6 +71,7 @@ jobs:
             playwright-report/
             allure-report/
             test-results/
+            allure-results/
           retention-days: 30
 
       - name: Setup Pages
@@ -117,13 +118,15 @@ jobs:
           name: playwright-results
           path: playwright-results
 
+      - name: Install dependencies
+        run: npm ci
+
       - name: Debug File Structure
         run: ls -R playwright-results/
 
       - name: Send Email Report
         run: node scripts/generateEmailReport.js
         env:
-          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           TEST_ENV: 'live'

@@ -16,6 +16,8 @@ blob-report/
 playwright/.cache/
 allure-results/
 allure-report/
+allure-report-standalone/
+allure-report-awesome-standalone/
 allure-history/
 *.spec.js.snap
 test-results.xml
