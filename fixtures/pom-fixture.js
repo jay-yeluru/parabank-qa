@@ -1,11 +1,11 @@
 const baseTest = require('@playwright/test');
-const { contextFixtures } = require('./context-fixtures');
+const { apiFixtures } = require('./api-fixtures');
 
 /**
- * Main test export combining all fixtures.
- * Refactor note: Split into core and context fixtures for better maintainability.
+ * Main consolidated test export.
+ * Combines Core, Context (UI Setup), and API fixtures.
  */
 module.exports = {
-  test: contextFixtures,
+  test: apiFixtures,
   expect: baseTest.expect,
 };

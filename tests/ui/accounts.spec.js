@@ -8,14 +8,10 @@ test.describe('ParaBank - Accounts Management (Step 5 & 6) @ui @accounts', () =>
   }) => {
     const userData = registeredUser;
 
-    const loginPage = poManager.getLoginPage();
     const openAccountPage = poManager.getOpenNewAccountPage();
     const overviewPage = poManager.getAccountsOverviewPage();
 
-    await loginPage.navigate();
-    await loginPage.login(userData.username, userData.password);
-    await loginPage.verifySuccessfulLogin();
-
+    // The user is already logged in via the savingsAccount fixture dependency!
     // 5. Create a Savings account (Step 5)
     await openAccountPage.navigate();
     const savingsAccountId = await openAccountPage.openAccount(dataManager.getSavingsAccountType());

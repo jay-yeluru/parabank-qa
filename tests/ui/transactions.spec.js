@@ -8,17 +8,14 @@ test.describe('ParaBank - Fund Transfers and Bill Payments (Step 7 & 8) @ui @tra
   }) => {
     const { userData, accountId: savingsAccountId } = savingsAccount;
 
-    const loginPage = poManager.getLoginPage();
     const overviewPage = poManager.getAccountsOverviewPage();
     const transferPage = poManager.getTransferFundsPage();
     const billPayPage = poManager.getBillPayPage();
 
-    await loginPage.navigate();
-    await loginPage.login(userData.username, userData.password);
-    await loginPage.verifySuccessfulLogin();
-
     // Preparation: Get a from-account ID which isn't the new savings account
+    // User is already logged in via savingsAccount fixture!
     await overviewPage.navigate();
+
     const accountRows = await overviewPage.getAccountRows();
     const defaultAccountId =
       accountRows.find((r) => r.accountId !== savingsAccountId)?.accountId ||

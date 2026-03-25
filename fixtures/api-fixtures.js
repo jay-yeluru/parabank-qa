@@ -7,7 +7,7 @@ const { ApiClient } = require('../utils/apiClient');
  * @property {object} apiData - Self-contained data for API testing (User + Account)
  */
 
-/** @type {import('@playwright/test').TestType<ApiFixtures & import('./context-fixtures').ContextFixtures, {}>} */
+/** @type {import('@playwright/test').TestType<ApiFixtures & import('./context-fixtures').ContextFixtures & import('./core-fixtures').CoreFixtures, {}>} */
 const apiFixtures = contextFixtures.extend({
   // Authenticated API client fixture
   apiUserClient: async ({ request, registeredUser }, use) => {
@@ -63,4 +63,4 @@ const apiFixtures = contextFixtures.extend({
   },
 });
 
-module.exports = { test: apiFixtures };
+module.exports = { apiFixtures };

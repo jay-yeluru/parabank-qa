@@ -14,29 +14,52 @@ The framework covers both UI and API test scenarios, ensuring the complete funct
 ## 📁 Project Structure
 
 ```text
-├── .github/workflows/    # CI/CD: Automated and Manual pipelines
-├── configs/              # Infrastructure Config (URLs, Credentials per tier)
-├── data/                 # Tier-Specific Test Data (Amounts, Messages in JSON)
-├── fixtures/             # Custom Playwright fixtures (POM, Context, API, and Core)
-├── pages/                # Page Object Model (POM) classes with test.step integration
-├── scripts/              # Helper scripts (Email reporting)
-├── tests/                # Feature-based test suites (@ui, @api, @smoke, @transactions)
-├── utils/                # Shared utilities (Data generation, API clients, Constants, Helpers)
-├── playwright.config.js  # Playwright global configuration (Parallel, Allure, Traces)
-└── package.json          # Project dependencies, scripts, and Prettier config
+├── .github/workflows/    # CI/CD: Automated (push) and Manual (workflow_dispatch) pipelines
+│   ├── playwright.yml     # Main trunk pipeline (Allure + Slack/Email)
+│   └── manual-tests.yml   # Ad-hoc runs with environment/suite selectors
+├── configs/              # Infrastructure Configuration
+│   ├── environment.js     # Dispatcher for active test tier
+│   ├── env.stage.js       # Staging environment URLs and settings
+│   ├── env.beta.js        # Beta environment URLs and settings
+│   └── env.prod.js        # Production environment credentials
+├── data/                 # Tier-Specific Test Data
+│   ├── default.json       # Common amounts, endpoints, and fallbacks
+│   ├── stage.json         # Staging-specific overrides
+│   └── beta.json          # Beta-specific overrides
+├── fixtures/             # Playwright Dependency Injection
+│   ├── core-fixtures.js   # Basic state and poManager instantiation
+│   ├── context-fixtures.js # Complex states (registeredUser, savingsAccount)
+│   ├── api-fixtures.js     # Authenticated API clients and test data
+│   └── pom-fixture.js      # Main export aggregating all UI/API fixtures
+├── pages/                # Page Object Models (POM) 
+│   ├── LoginPage.js       # Auth and entry-point logic
+│   ├── HomePage.js        # Global navigation and session state
+│   ├── BillPayPage.js     # Transaction processing UI
+│   └── ApiResponsePage.js  # Generic API response validation wrapper
+├── scripts/              # Infrastructure Scripts
+│   └── generateEmailReport.js # Allure Awesome -> Standalone HTML -> Resend Email
+├── tests/                # Feature-based Test Suites
+│   ├── api/               # REST API specs (Find Transactions, etc.)
+│   ├── setup/             # Global Setup (Database Cleanup once per worker set)
+│   └── ui/                # UI E2E specs (Auth, Transfer, Bill Pay)
+├── utils/                # Shared Utilities & Logic
+│   ├── TestDataManager.js # Tiered data loader (Constants -> Default -> Env)
+│   ├── ApiClient.js       # REST services wrapper (Axios-like interface)
+│   ├── constants.js       # Immutable app-level values and patterns
+│   └── helpers.js         # Random data generators (Parallel-index unique users)
+├── playwright.config.js  # Playwright Global Engine Config
+└── package.json          # Scripts, dependencies, and formatting rules
 ```
 
 ## 🛠️ Key Features
 
-- **Tiered Environment Support**: Dispatcher system supports `stage`, `beta`, and `prod` with separate configs and data.
-- **Page Object Model (POM)**: Encapsulates page logic and selectors, improving modularity and reusability.
-- **Custom Fixtures**: Provides dependency injection for POMs and reusable test states (e.g., `registeredUser`).
-- **Parallel Execution**: Configured with `fullyParallel: true`, enabling multi-worker independent test runs.
-- **Rich Reporting & Allure**:
-  - **Allure Reports**: Historical trends, nested categories, and clean execution steps using `test.step`.
-  - **GitHub Pages**: Automated deployment of Allure reports with persistent cross-run history.
-  - **Email Reports**: Stats and pass/fail notifications via **Resend**, featuring an **Allure Standalone HTML** attachment for full offline interactivity within the email.
-- **Code Quality**: Prettier integration for consistent formatting across the team.
+- **Faker-Powered Data**: Integrated `@faker-js/faker` for generating realistic names, addresses, and phone numbers in every test run.
+- **Robust Parallel Safety**: Custom logic ensures each parallel worker generates unique usernames using a combination of worker index and high-precision timestamps, preventing registration collisions.
+- **Fixture-First Architecture**: Consolidates all dependencies (Core, UI Context, and API) into a single, unified fixture system in `pom-fixture.js`.
+- **Intelligent Reporting**: 
+  - **Allure Awesome**: Provides standard-compliant, standalone HTML reports.
+  - **Size-Aware Emailing**: The email reporting script automatically handles large reports (e.g., those with many screenshots/videos) by skipping attachments that exceed 20MB, ensuring critical test status emails are always delivered with links to interactive dashboards.
+- **Rich Visualization**: Uses `test.step` within fixtures for detailed setup traceability in Allure reports.
 
 ## 🏗️ Implementation Architecture
 

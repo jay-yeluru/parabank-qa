@@ -3,15 +3,11 @@ const { test } = require('../../fixtures/pom-fixture');
 
 test.describe('ParaBank - Global Navigation (Step 4) @ui @navigation', () => {
 
-  test('TC-01 - Global Navigation Menu Visibility and Links', async ({ poManager, registeredUser, dataManager }) => {
-    const loginPage = poManager.getLoginPage();
+  test('TC-01 - Global Navigation Menu Visibility and Links', async ({ poManager, loggedInPage, dataManager }) => {
     const homePage = poManager.getHomePage();
 
-    await test.step('Login to access global navigation', async () => {
-      await loginPage.navigate();
-      await loginPage.login(registeredUser.username, registeredUser.password);
-      await loginPage.verifySuccessfulLogin();
-    });
+    // No need to manually login anymore!
+
 
     await test.step('Verify all navigation menu links are visible', async () => {
       await homePage.verifyGlobalNavMenu();

@@ -1,3 +1,5 @@
+const { faker } = require('@faker-js/faker');
+
 /**
  * Generates a random alphanumeric string of the given length.
  * @param {number} length
@@ -10,12 +12,13 @@ function randomString(length = 8) {
 }
 
 /**
- * Generates a unique username formatted as user_test_timestamp.
+ * Generates a unique username formatted as user_workerIndex_timestamp_random.
  * @returns {string}
  */
 function generateUsername() {
   const workerIndex = process.env.TEST_PARALLEL_INDEX || '0';
-  return `user_${workerIndex}_${randomString(6)}`;
+  const timestamp = Date.now().toString(36).slice(-4);
+  return `user_${workerIndex}_${timestamp}_${randomString(4)}`;
 }
 
 /**
@@ -24,9 +27,7 @@ function generateUsername() {
  * @returns {string}
  */
 function randomDigits(digits = 9) {
-  return Math.floor(Math.random() * Math.pow(10, digits))
-    .toString()
-    .padStart(digits, '0');
+  return faker.string.numeric(digits);
 }
 
 /**
@@ -37,14 +38,14 @@ function randomDigits(digits = 9) {
  */
 function generateUserData() {
   return {
-    firstName: 'Test',
-    lastName: 'User',
-    street: '123 Main St',
-    city: 'New York',
-    state: 'NY',
-    zipCode: '10001',
-    phone: randomDigits(10),
-    ssn: randomDigits(9),
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+    street: faker.location.streetAddress(),
+    city: faker.location.city(),
+    state: faker.location.state({ abbreviated: true }),
+    zipCode: faker.location.zipCode('#####'),
+    phone: faker.string.numeric(10),
+    ssn: faker.string.numeric(9),
     username: generateUsername(),
     password: 'Password@123',
   };

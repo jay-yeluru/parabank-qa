@@ -1,4 +1,4 @@
-const { test } = require('../../fixtures/api-fixtures');
+const { test } = require('../../fixtures/pom-fixture');
 const { ApiResponsePage } = require('../../pages/ApiResponsePage');
 
 test.describe('ParaBank - Find Transactions API (Self-Contained) @api @transactions', () => {

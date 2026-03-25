@@ -1,4 +1,4 @@
-const { expect } = require('@playwright/test');
+const { test, expect } = require('@playwright/test');
 
 class OpenNewAccountPage {
   /**
@@ -38,7 +38,7 @@ class OpenNewAccountPage {
       // Wait for result and ensure the new account value is actually populated
       // Parabank sometimes shows the link but with no text for a split second
       await expect(this.successHeader).toContainText('Account Opened!', { timeout: 15000 });
-      
+
       // Wait specifically for the link to contain a digit (the account number)
       await expect(this.newAccountId).toContainText(/\d+/, { timeout: 15000 });
 
@@ -54,7 +54,5 @@ class OpenNewAccountPage {
     });
   }
 }
-
-const { test } = require('@playwright/test');
 
 module.exports = { OpenNewAccountPage };

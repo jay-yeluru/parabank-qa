@@ -7,7 +7,7 @@ module.exports = defineConfig({
 
   fullyParallel: true, // Independent tests can now run in parallel
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 1, // Add retries for stability with more workers
+  retries: process.env.CI ? 2 : undefined, // Add retries for stability with more workers
   workers: process.env.CI ? 2 : undefined, // Use all CPU cores locally
 
   reporter: [
