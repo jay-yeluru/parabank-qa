@@ -80,7 +80,12 @@ After execution:
 
 ## 📧 CI/CD & Email Setup
 
-The GitHub Actions pipeline requires the following **Secrets** to be configured in your repository:
+The GitHub Actions pipeline is configured for:
+- **Automatic Execution**: Runs on every `push` or `pull_request` to the `main` branch.
+- **Manual Execution**: Use the **Actions** tab in GitHub to run the `Manual Playwright Tests` workflow. This allows you to select a specific test suite (`all`, `ui`, or `api`) and target environment.
+
+### Secrets Configuration
+The pipeline requires the following **Secrets** to be configured in your repository:
 - `BASE_URL`: The ParaBank URL (e.g., `https://parabank.parasoft.com`).
 - `SENDGRID_API_KEY`: API key for email delivery.
 - `EMAIL_FROM`: Sender email address.
