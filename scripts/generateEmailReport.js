@@ -49,12 +49,23 @@ async function sendEmail() {
 
   // 2. Prepare Attachment
   let attachments = [];
+  let attachmentSkipped = false;
+  const MAX_ATTACHMENT_SIZE_MB = 20; // Stay well under 40MB total payload
+
   if (fs.existsSync(reportFile)) {
-    attachments.push({
-      filename: `allure-report-${TEST_ENV.toLowerCase()}.html`,
-      content: fs.readFileSync(reportFile),
-    });
-    console.log('Allure report added as attachment.');
+    const stats = fs.statSync(reportFile);
+    const sizeInMB = stats.size / (1024 * 1024);
+    
+    if (sizeInMB <= MAX_ATTACHMENT_SIZE_MB) {
+      attachments.push({
+        filename: `allure-report-${TEST_ENV.toLowerCase()}.html`,
+        content: fs.readFileSync(reportFile),
+      });
+      console.log(`Allure report (${sizeInMB.toFixed(2)}MB) added as attachment.`);
+    } else {
+      attachmentSkipped = true;
+      console.warn(`Allure report (${sizeInMB.toFixed(2)}MB) exceeds limit of ${MAX_ATTACHMENT_SIZE_MB}MB. Skipping attachment.`);
+    }
   }
 
   // 3. Look for Playwright report.json
@@ -145,7 +156,10 @@ async function sendEmail() {
 
         <div style="margin-top: 30px; padding: 15px; background-color: #f9fafb; border-radius: 6px; text-align: center;">
           <a href="${pagesUrl}" style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">View Interactive History</a>
-          <p style="margin-top: 15px; color: #666; font-size: 12px;">The full Allure single-file report is attached to this email.</p>
+          ${attachmentSkipped 
+            ? `<p style="margin-top: 15px; color: #ef4444; font-size: 12px;">Notice: The full report was too large to be attached. Please view it via the dashboard link above or download the "allure-report-standalone" artifact from the GitHub Action run.</p>`
+            : `<p style="margin-top: 15px; color: #666; font-size: 12px;">The full Allure single-file report is attached to this email.</p>`
+          }
         </div>
       </div>
     </div>
