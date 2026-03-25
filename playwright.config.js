@@ -15,7 +15,8 @@ module.exports = defineConfig({
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['list'],
     ['junit', { outputFile: 'test-results/results.xml' }],
-    ['json', { outputFile: 'test-results/report.json' }]
+    ['json', { outputFile: 'test-results/report.json' }],
+    ['allure-playwright', { outputFolder: 'allure-results' }]
   ],
   use: {
     baseURL: process.env.BASE_URL || 'https://parabank.parasoft.com',
